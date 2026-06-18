@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - TaskFlow</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="form-page">
+    <div class="form-card">
+
+        <div class="form-title">📝 Create Account</div>
+        <div class="form-subtitle">
+            Sign up to continue
+        </div>
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username"
+                       class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email"
+                       class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password"
+                       class="form-control" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit"
+                        class="btn btn-primary">
+                    Create Account
+                </button>
+            </div>
+
+        </form>
+
+        <p style="text-align:center; margin-top:15px;">
+            Already have an account?
+            <a href="/login">Login</a>
+        </p>
+
+    </div>
+</div>
+
+</body>
+</html>

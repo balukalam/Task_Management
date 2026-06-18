@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Task — TaskFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="logo-icon">📋</div>
+    TaskFlow
+  </a>
+  <div class="navbar-links">
+    <a href="/">Dashboard</a>
+    <a href="/calendar">Calendar</a>
+    <a href="/export">Export CSV</a>
+  </div>
+</nav>
+
+<div class="form-page">
+  <div class="form-card">
+
+    <div class="form-title">➕ Add New Task</div>
+    <div class="form-subtitle">Fill in the details below to schedule a new task.</div>
+
+    <form method="POST">
+
+      <!-- Task Name -->
+      <div class="form-group">
+        <label class="form-label">Task Name *</label>
+        <input type="text" name="task_name" class="form-control"
+               placeholder="e.g. Complete project report" required>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control"
+                  placeholder="Add any notes or details about this task..."></textarea>
+      </div>
+
+      <!-- Date & Time -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time *</label>
+          <input type="time" name="time" class="form-control" required>
+        </div>
+      </div>
+
+      <!-- Priority -->
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <div class="priority-options">
+          <div class="priority-option low">
+            <input type="radio" name="priority" id="p-low" value="Low" checked>
+            <label for="p-low">🟢 Low</label>
+          </div>
+          <div class="priority-option medium">
+            <input type="radio" name="priority" id="p-medium" value="Medium">
+            <label for="p-medium">🟡 Medium</label>
+          </div>
+          <div class="priority-option high">
+            <input type="radio" name="priority" id="p-high" value="High">
+            <label for="p-high">🔴 High</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <a href="/" class="btn btn-secondary">← Cancel</a>
+        <button type="submit" class="btn btn-primary">➕ Add Task</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

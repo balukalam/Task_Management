@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar — TaskFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="logo-icon">📋</div>
+    TaskFlow
+  </a>
+  <div class="navbar-links">
+    <a href="/">Dashboard</a>
+    <a href="/calendar">Calendar</a>
+    <a href="/export">Export CSV</a>
+    <a href="/add" class="btn btn-primary" style="padding:7px 16px;font-size:13px;">+ Add Task</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h1 class="page-title">📅 Task <span>Calendar</span></h1>
+      <p class="page-subtitle">All your tasks organised by date.</p>
+    </div>
+    <a href="/" class="btn btn-secondary">← Back to Dashboard</a>
+  </div>
+
+  {% if tasks %}
+  <div class="calendar-grid">
+    {% for task in tasks %}
+    <div class="cal-card">
+      <div class="cal-date">
+        📅 {{ task[3] }} &nbsp;·&nbsp; ⏰ {{ task[4] }}
+      </div>
+      <div class="cal-task-name">{{ task[1] }}</div>
+      {% if task[2] %}
+      <div style="font-size:13px;color:var(--dim);margin-bottom:10px;line-height:1.5;">{{ task[2] }}</div>
+      {% endif %}
+      <div class="cal-meta">
+        <span class="badge badge-{{ task[5] }}">{{ task[5] }}</span>
+        <span class="status-badge status-{{ task[6]|replace(' ', '-') }}">{{ task[6] }}</span>
+      </div>
+      <!-- Progress -->
+      <div class="progress-wrap" style="margin-top:14px;">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:{{ task[7] }}%"></div>
+        </div>
+        <span class="progress-pct">{{ task[7] }}%</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">📭</div>
+    <p>No tasks scheduled yet. <a href="/add" style="color:var(--accent);">Add one now</a></p>
+  </div>
+  {% endif %}
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

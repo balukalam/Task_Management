@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow — Smart Scheduler</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="logo-icon">📋</div>
+    TaskFlow
+  </a>
+  <div class="navbar-links">
+    <a href="/">Dashboard</a>
+    <a href="/calendar">Calendar</a>
+    <a href="/export">Export CSV</a>
+    <a href="/add" class="btn btn-primary" style="padding:7px 16px;font-size:13px;">+ Add Task</a>
+    <a href="/logout" class="btn btn-danger">
+    🚪 Logout
+</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── Page Header ── -->
+  <div class="page-header">
+    <h1 class="page-title">Smart <span>Task Scheduler</span></h1>
+
+    <p class="welcome-text">
+        👋 Welcome, {{ session['user'] }}
+    </p>
+
+    <p class="page-subtitle">
+        Manage, track, and complete your tasks efficiently.
+    </p>
+</div>
+
+  <!-- ── Stats ── -->
+  <div class="stats-grid">
+    <div class="stat-card total">
+      <div class="stat-icon">📋</div>
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-label">Total Tasks</div>
+    </div>
+    <div class="stat-card completed">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value">{{ completed }}</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-value">{{ pending }}</div>
+      <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-card inprogress">
+      <div class="stat-icon">🔄</div>
+      <div class="stat-value">{{ progress }}</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+  </div>
+
+  <!-- ── Toolbar ── -->
+  <div class="toolbar">
+    <!-- Search -->
+    <form action="/search" method="GET" class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" name="q" placeholder="Search tasks by name...">
+      <button type="submit">Search</button>
+    </form>
+
+    <!-- Priority filters -->
+    <div class="filter-group">
+      <a href="/filter/all"    class="pill">All</a>
+      <a href="/filter/High"   class="pill">🔴 High</a>
+      <a href="/filter/Medium" class="pill">🟡 Medium</a>
+      <a href="/filter/Low"    class="pill">🟢 Low</a>
+    </div>
+
+    <!-- Status filters -->
+    <div class="filter-group">
+      <a href="/status/all"         class="pill status">All Status</a>
+      <a href="/status/Pending"     class="pill status">Pending</a>
+      <a href="/status/In Progress" class="pill status">In Progress</a>
+      <a href="/status/Completed"   class="pill status">Completed</a>
+      <a href="/status/Missed"      class="pill status">Missed</a>
+    </div>
+
+    <!-- Actions -->
+    <div class="btn-group">
+      <a href="/add"    class="btn btn-primary">➕ Add Task</a>
+      <a href="/calendar" class="btn btn-secondary">📅 Calendar</a>
+      <a href="/export"   class="btn btn-cyan">📤 Export</a>
+    </div>
+  </div>
+
+  <!-- ── Table ── -->
+  <div class="table-wrapper">
+    {% if tasks %}
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Progress</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+        <tr>
+          <!-- Task name + desc -->
+          <td data-label="Task">
+            <div class="task-name">{{ task[1] }}</div>
+            {% if task[2] %}
+            <div class="task-desc">{{ task[2] }}</div>
+            {% endif %}
+          </td>
+
+          <!-- Date -->
+          <td data-label="Date">
+            <span class="task-date">{{ task[3] }}</span>
+          </td>
+
+          <!-- Time -->
+          <td data-label="Time">
+            <span class="task-time">{{ task[4] }}</span>
+          </td>
+
+          <!-- Priority -->
+          <td data-label="Priority">
+            <span class="badge badge-{{ task[5] }}">
+              {% if task[5] == 'High' %}🔴{% elif task[5] == 'Medium' %}🟡{% else %}🟢{% endif %}
+              {{ task[5] }}
+            </span>
+          </td>
+
+          <!-- Status -->
+          <td data-label="Status">
+            <span class="status-badge status-{{ task[6]|replace(' ', '-') }}">{{ task[6] }}</span>
+          </td>
+
+          <!-- Progress -->
+          <td data-label="Progress">
+            <div class="progress-wrap">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: {{ task[7] }}%"></div>
+              </div>
+              <span class="progress-pct">{{ task[7] }}%</span>
+            </div>
+          </td>
+
+          <!-- Actions -->
+          <td data-label="Actions">
+            <div class="action-cell">
+    <a href="/edit/{{ task[0] }}" class="btn-edit">✎ Edit</a>
+
+    {% if task[6] != 'Completed' %}
+    <a href="/complete/{{ task[0] }}"
+       class="btn-complete">
+       ✔ Complete
+    </a>
+    {% endif %}
+
+    <a href="/delete/{{ task[0] }}"
+       class="btn-delete"
+       onclick="return confirm('Delete this task?')">
+       ✕ Delete
+    </a>
+</div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <p>No tasks found. <a href="/add" style="color:var(--accent);">Add your first task</a></p>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

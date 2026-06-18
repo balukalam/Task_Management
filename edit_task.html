@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Task — TaskFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="logo-icon">📋</div>
+    TaskFlow
+  </a>
+  <div class="navbar-links">
+    <a href="/">Dashboard</a>
+    <a href="/calendar">Calendar</a>
+    <a href="/export">Export CSV</a>
+  </div>
+</nav>
+
+<div class="form-page">
+  <div class="form-card">
+
+    <div class="form-title">✏️ Edit Task</div>
+    <div class="form-subtitle">Update the task details below.</div>
+
+    <form method="POST">
+
+      <!-- Task Name -->
+      <div class="form-group">
+        <label class="form-label">Task Name *</label>
+        <input type="text" name="task_name" class="form-control"
+               value="{{ task[1] }}" required>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control"
+                  placeholder="Add any notes...">{{ task[2] if task[2] else '' }}</textarea>
+      </div>
+
+      <!-- Date & Time -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input type="date" name="date" class="form-control"
+                 value="{{ task[3] }}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time *</label>
+          <input type="time" name="time" class="form-control"
+                 value="{{ task[4] }}" required>
+        </div>
+      </div>
+
+      <!-- Priority -->
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <div class="priority-options">
+          <div class="priority-option low">
+            <input type="radio" name="priority" id="p-low" value="Low"
+                   {% if task[5] == 'Low' %}checked{% endif %}>
+            <label for="p-low">🟢 Low</label>
+          </div>
+          <div class="priority-option medium">
+            <input type="radio" name="priority" id="p-medium" value="Medium"
+                   {% if task[5] == 'Medium' %}checked{% endif %}>
+            <label for="p-medium">🟡 Medium</label>
+          </div>
+          <div class="priority-option high">
+            <input type="radio" name="priority" id="p-high" value="High"
+                   {% if task[5] == 'High' %}checked{% endif %}>
+            <label for="p-high">🔴 High</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-control">
+          <option value="Pending"     {% if task[6] == 'Pending'     %}selected{% endif %}>⏳ Pending</option>
+          <option value="In Progress" {% if task[6] == 'In Progress' %}selected{% endif %}>🔄 In Progress</option>
+          <option value="Completed"   {% if task[6] == 'Completed'   %}selected{% endif %}>✅ Completed</option>
+          <option value="Missed"      {% if task[6] == 'Missed'      %}selected{% endif %}>❌ Missed</option>
+        </select>
+      </div>
+
+      <!-- Progress -->
+      <div class="form-group">
+        <label class="form-label">Progress</label>
+        <input type="range" name="progress" id="progressRange"
+               min="0" max="100" value="{{ task[7] }}"
+               oninput="document.getElementById('progressVal').textContent = this.value + '%'">
+        <div class="range-value" id="progressVal">{{ task[7] }}%</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <a href="/" class="btn btn-secondary">← Cancel</a>
+        <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
